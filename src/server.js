@@ -65,7 +65,7 @@ Models.sequelize.sync().then(() => {
 		res.status(404).render('404', {});
 	});
 
-	app.listen(8088, () => {
+	app.listen(8069, () => {
 		console.log("Server started");
 	});
 });
