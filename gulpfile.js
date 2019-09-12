@@ -8,7 +8,6 @@ const replace = require('gulp-replace');
 const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
 const bro = require('gulp-bro');
-const babel = require('gulp-babel')
 const argv = require('yargs').argv;
 
 gulp.task('watch', (done) => {
@@ -25,7 +24,7 @@ let lintFiles = [
 ];
 
 gulp.task('watch', (done) => {
-	gulp.watch('./app/**/*.js', gulp.series('transpile', 'browserify'));
+	gulp.watch('./app/**/*.js', gulp.series('browserify'));
 	gulp.watch('./css/**/*.less', gulp.series('less'));
 });
 
@@ -37,8 +36,13 @@ gulp.task('less', (done) => {
 			done();
 		})
 		.pipe(gulpif(argv.production, cssmin()))
-		.pipe(gulp.dest('./css'));
+		.pipe(gulp.dest('./public/css/'));
 });
+
+gulp.task('fonts', (done) => {
+	return gulp.src('./node_modules/font-awesome/fonts/*')
+	.pipe(gulp.dest('./public/fonts'));
+})
 
 gulp.task('lintwatch', (done) => {
 	gulp.watch(lintFiles).on('change', (path, a) => {
@@ -58,19 +62,6 @@ gulp.task('lintwatch', (done) => {
 				overwrite: true
 			})));
 	});
-});
-
-gulp.task('transpile', (done) => {
-	return gulp.src('./app/**/*.js')
-		.pipe(babel({
-			compact: false,
-			presets: ['react', 'es2015']
-		}))
-		.on('error', (err) => {
-			console.log(err.message);
-			done();
-		})
-		.pipe(gulp.dest('./tmp/app'));
 });
 
 gulp.task('browserify', (done) => {
@@ -95,4 +86,4 @@ gulp.task('lint', (done) => {
 		.pipe(eslint.format());
 });
 
-gulp.task('build', gulp.series('transpile', 'browserify', 'less'));
+gulp.task('build', gulp.series('browserify', 'less'));

@@ -1,0 +1,1 @@
+docker run -p 8069:80 --mount type=bind,src=/home/lucas/Git/teambrh,dst=/var/www/teambrh teambrh
